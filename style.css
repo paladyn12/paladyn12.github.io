@@ -1,0 +1,382 @@
+/* Global Styles */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --text-light: #666666;
+    --accent-color: #000000;
+    --border-color: #e0e0e0;
+    --hover-bg: #f9f9f9;
+    --font-main: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--text-light);
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.header {
+    padding: 80px 0 40px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 60px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.header .subtitle {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    font-weight: 300;
+}
+
+/* Sections */
+.section {
+    margin-bottom: 80px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    display: inline-block;
+}
+
+/* Profile Grid */
+.about-container {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.profile-image-container {
+    flex-shrink: 0;
+}
+
+.profile-image {
+    width: 200px;
+    height: 250px;
+    /* Adjust aspect ratio as needed */
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Stack vertically by default in this layout */
+    gap: 15px;
+    flex-grow: 1;
+}
+
+.profile-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .about-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-grid {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+
+.profile-item .label {
+    width: 100px;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.profile-item .value {
+    font-weight: 400;
+}
+
+/* Resume Grid (Education) */
+.resume-grid {
+    display: grid;
+    gap: 30px;
+}
+
+.resume-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.resume-item .date {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+.list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.list li::before {
+    content: "•";
+    margin-right: 8px;
+    color: var(--text-light);
+}
+
+/* Skills */
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skill-tag {
+    background-color: var(--hover-bg);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Timeline */
+.timeline {
+    border-left: 2px solid var(--border-color);
+    padding-left: 30px;
+    position: relative;
+}
+
+.timeline-item {
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -37px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--bg-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 50%;
+}
+
+.timeline-date {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 5px;
+}
+
+.award {
+    margin-top: 10px;
+    color: #d35400;
+    /* Bronze/Gold color for emphasis */
+    font-weight: 500;
+}
+
+/* Projects */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.project-card {
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background-color: var(--bg-color);
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.project-institution {
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    /* Or a specific color like blue or gray */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.project-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    /* Reduced since we have institution above and no summary below */
+}
+
+.project-date {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+
+.project-summary {
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+/* Footer */
+.footer {
+    border-top: 1px solid var(--border-color);
+    padding: 40px 0;
+    margin-top: 80px;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    /* White overlay */
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 40px;
+    border: 1px solid var(--border-color);
+    width: 80%;
+    max-width: 800px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-meta {
+    color: var(--text-light);
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.project-detail-section {
+    margin-bottom: 30px;
+}
+
+.project-detail-section h4,
+.meta-item h4 {
+    border-left: 3px solid var(--accent-color);
+    padding-left: 10px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.feature-list li {
+    margin-bottom: 5px;
+}
+
+.architecture-placeholder {
+    width: 100%;
+    min-height: 200px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    margin-top: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.architecture-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    display: block;
+    margin-top: 10px;
+}
+
+/* Link Styling */
+.profile-item .value a {
+    color: #0066cc;
+    /* Standard link blue for clarity */
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-bottom: 1px solid transparent;
+}
+
+.profile-item .value a:hover {
+    color: #004499;
+    text-decoration: underline;
+    background-color: rgba(0, 102, 204, 0.05);
+    border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+}
