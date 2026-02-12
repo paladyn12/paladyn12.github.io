@@ -1,1 +1,179 @@
-page
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kim Taewan - Backend Developer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Backend Developer <span class="highlight">김태완</span></h1>
+            <p class="subtitle">Clean Code & Architecture</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- About Section -->
+        <section id="about" class="section">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-container">
+                <div class="profile-image-container">
+                    <img src="assets/img/id_photo.png" alt="Kim Taewan ID Photo" class="profile-image">
+                </div>
+                <div class="profile-grid">
+                    <div class="profile-item">
+                        <span class="label">이름</span>
+                        <span class="value">김태완</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="label">생년월일</span>
+                        <span class="value">2000.09.20</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="label">연락처</span>
+                        <span class="value">010-8650-4416</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="label">이메일</span>
+                        <span class="value"><a href="mailto:paladyn12@naver.com">paladyn12@naver.com</a></span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="label">Github</span>
+                        <span class="value"><a href="https://github.com/paladyn12"
+                                target="_blank">github.com/paladyn12</a></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education & Certifications -->
+        <section id="education" class="section">
+            <h2 class="section-title">Education & Qualifications</h2>
+            <div class="resume-grid">
+                <div class="resume-item">
+                    <h3>상명대학교(서울) 컴퓨터과학전공</h3>
+                    <p class="date">2019.03 - 2025.08</p>
+                    <p class="description">학점: 전공 4.36 / 4.5 (전체 4.27 / 4.5)</p>
+                </div>
+                <div class="resume-item">
+                    <h3>어학 및 SW 역량</h3>
+                    <ul class="list">
+                        <li>Toeic Speaking Level 7 (AL)</li>
+                        <li>삼성 SW 역량 테스트 B형</li>
+                    </ul>
+                </div>
+                <div class="resume-item">
+                    <h3>자격증</h3>
+                    <ul class="list">
+                        <li>SQLD (2024.12.13)</li>
+                        <li>정보처리기사 (2025.06.13)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills -->
+        <section id="skills" class="section">
+            <h2 class="section-title">Tech Stack</h2>
+            <div class="skills-container">
+                <span class="skill-tag">JAVA</span>
+                <span class="skill-tag">Spring Framework</span>
+                <span class="skill-tag">Spring Data JPA</span>
+                <span class="skill-tag">MySQL</span>
+                <span class="skill-tag">Git</span>
+                <span class="skill-tag">Docker</span>
+                <span class="skill-tag">EC2</span>
+            </div>
+        </section>
+
+        <!-- Experience/Activities -->
+        <section id="experience" class="section">
+            <h2 class="section-title">Activities & Awards</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2026.02.11 - 2026.04.03</div>
+                    <div class="timeline-content">
+                        <h3>삼성전자 NW 사업부 연계 프로젝트</h3>
+                        <p>실무 연계 프로젝트 수행</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2025.07 - Present</div>
+                    <div class="timeline-content">
+                        <h3>삼성 청년 SW·AI 아카데미 (SSAFY) 14기</h3>
+                        <p>알고리즘 및 백엔드 심화 과정 수료</p>
+                        <p class="award">🏆 1학기 성적우수상 (JAVA 전공반 종합 성적 1위)</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2025.02 - 2025.07</div>
+                    <div class="timeline-content">
+                        <h3>[카카오 x 구름] 스프링 백엔드 개발자 과정</h3>
+                        <p>클라우드 기반 스프링 백엔드 개발 집중 교육</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section id="projects" class="section">
+            <h2 class="section-title">Projects</h2>
+            <div class="project-grid">
+                <article class="project-card" data-id="project4">
+                    <div class="project-content">
+                        <span class="project-institution">삼성전자 네트워크 사업부</span>
+                        <h3>대용량 데이터 처리 플랫폼</h3>
+                    </div>
+                </article>
+                <article class="project-card" data-id="project1">
+                    <div class="project-content">
+                        <span class="project-institution">SSAFY</span>
+                        <h3>AI 기반 온라인 스터디 관리 자동화 플랫폼</h3>
+                    </div>
+                </article>
+                <article class="project-card" data-id="project2">
+                    <div class="project-content">
+                        <span class="project-institution">구름톤 딥다이브</span>
+                        <h3>Gamification 기반 LMS 사이트</h3>
+                    </div>
+                </article>
+                <article class="project-card" data-id="project3">
+                    <div class="project-content">
+                        <span class="project-institution">SSAFY</span>
+                        <h3>웹 IDE 기반 모의 코테 사이트</h3>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Kim Taewan. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modal-title">Project Title</h2>
+            <p id="modal-date" class="modal-meta"></p>
+            <div id="modal-body">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
