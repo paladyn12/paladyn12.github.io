@@ -1,78 +1,73 @@
 const projectData = {
     project4: {
         title: "대용량 데이터 처리 플랫폼",
-        date: "2026.02 - 2026.04",
+        date: "2026.02.19 - 2026.04.03 (7주)",
         institution: "삼성전자 네트워크 사업부",
-        overview: "대규모 트래픽과 데이터를 효율적으로 처리하기 위한 분산 처리 시스템 구축 프로젝트입니다. Kafka와 Spark를 활용하여 실시간 데이터 파이프라인을 구축했습니다.",
-        tech: ["Java", "Spring Boot", "Kafka", "Spark", "Hadoop"],
-        architecture: "Data Source -> Kafka -> Spark Streaming -> HDFS/DB -> API Server",
-        // No image provided yet, so leaving it undefined or handled by default logic
-
-        // Dummy Data
-        schedule: "2026.02 - 2026.04 (8주)",
-        member: "Backend 4명, Data Engineer 2명",
-        role: "데이터 파이프라인 구축, Kafka 클러스터 운영",
+        overview: "대규모의 인벤토리, 불량 처리 데이터를 통합 관리하는 플랫폼 개발",
+        tech: ["Python", "FastAPI", "Streamlit", "LangChain", "LangGraph", "MariaDB"],
+        architecture: "Client -> API Gateway -> Service(Study, Member, Attendance) -> DB\n                     |\n                     -> AI Service (Python)",
+        schedule: "2026.02 - 2026.04",
+        member: "PM 1명, Backend 3명, Frontend 1명, Infra 1명",
+        role: "인프라 구축, Schema 설계, DB 적재 Agent 개발",
         features: [
-            "실시간 로그 수집 및 분석",
-            "대용량 배치 처리 시스템",
-            "데이터 시각화 대시보드",
-            "장애 대응 및 모니터링 시스템"
+            "DB 적재 Agent 개발",
+            "Q&A Agent 개발",
+            "Report Agent 개발"
         ]
     },
     project1: {
         title: "AI 기반 온라인 스터디 관리 자동화 플랫폼",
         date: "2026.01 - 2026.02",
         institution: "SSAFY",
-        overview: "본 프로젝트는 스터디 그룹의 일정 관리와 출석 체크를 자동화하여 운영 효율성을 높이는 플랫폼입니다. AI를 활용하여 스터디원의 참여도를 분석하고, 자동화된 알림 서비스를 제공합니다.",
-        tech: ["Java", "Spring Boot", "MySQL", "JPA", "Python (AI Model)"],
+        overview: "스터디 그룹의 일정 관리와 출석 체크를 자동화하여 운영 효율성을 높이는 플랫폼",
+        tech: ["Java", "Spring", "Vue.js", "MySQL", "Spring Data JPA", "WebRTC (Livekit)", "WebSocket", "Docker", "Jenkins"],
         architecture: "Client -> API Gateway -> Service(Study, Member, Attendance) -> DB\n                     |\n                     -> AI Service (Python)",
         image: "assets/img/study_architecture.png",
 
         schedule: "2026.01 - 2026.02 (6주)",
-        member: "Backend 3명, Frontend 2명",
-        role: "팀장, Backend 리드, API 설계 및 CI/CD 구축",
+        member: "Infra 1명 Backend 4명, Frontend 1명",
+        role: "Backend 개발, ERD 설계 및 WebRTC 환경 구축",
         features: [
-            "스터디 생성 및 멤버 관리",
-            "AI 기반 자동 출석 체크",
-            "실시간 학습 시간 측정",
-            "스터디 랭킹 시스템"
+            "출결 관리, 벌금 정산 등 스터디 운영 관리 자동화",
+            "WebRTC 기반 화상 스터디",
+            "스터디 스트리밍 및 채팅 기능",
+            "AI 기반 공석 감지 및 비속어 필터링"
         ]
     },
     project2: {
         title: "Gamification 기반 LMS 사이트",
-        date: "2025.06",
+        date: "2025.06 (3주)",
         institution: "구름톤 딥다이브",
-        overview: "학습자들의 동기 부여를 위해 레벨, 배지, 랭킹 시스템 등 게임 요소를 적용한 학습 관리 시스템(LMS)입니다. 사용자의 학습 활동에 따라 실시간으로 경험치가 부여됩니다.",
-        tech: ["Java", "Spring Boot", "Spring Security", "Redis"],
+        overview: "학습자들의 동기 부여를 위해 레벨, 미션 등 게임 요소를 적용한 학습 관리 시스템(LMS)",
+        tech: ["Java", "Spring", "React", "MySQL", "Spring Data JPA", "Docker"],
         architecture: "Client -> Web Server -> Application Server -> DB <-> Redis (Leaderboard)",
 
-        schedule: "2025.06 (4주)",
-        member: "Backend 2명, Frontend 2명",
-        role: "Backend 개발, DB 설계, Redis 랭킹 시스템 구현",
+        schedule: "2025.06 (3주)",
+        member: "PM 1명, Infra 1명, Backend 2명, Frontend 2명",
+        role: "Backend 개발, DB 설계, 퀘스트 시스템 구현",
         features: [
             "사용자 레벨 및 경험치 시스템",
+            "미션 수행 및 퀘스트 클리어 기능",
             "일일/주간 랭킹 보드",
-            "게시판 및 댓글 기능",
             "관리자 대시보드"
         ]
     },
     project3: {
         title: "웹 IDE 기반 모의 코테 사이트",
-        date: "2025.12",
+        date: "2025.12 (3주)",
         institution: "SSAFY",
-        overview: "웹 브라우저 상에서 직접 코드를 작성하고 실행해볼 수 있는 모의 코딩 테스트 플랫폼입니다. Docker를 활용한 격리된 실행 환경을 제공하여 보안성을 확보했습니다.",
-        tech: ["Java", "Spring Boot", "Docker", "WebSocket"],
+        overview: "웹 IDE 기반 모의 코딩 테스트 플랫폼",
+        tech: ["Java", "Spring", "Vue.js", "MyBatis", "MySQL", "Docker"],
         architecture: "Client <-> WebSocket Server <-> Docker Container Manager -> Execution Containers",
         image: "assets/img/cote_architecture.png",
 
-        schedule: "2025.12 (4주)",
-        member: "Backend 3명, Frontend 3명",
-        role: "Backend 개발, Docker 컨테이너 오케스트레이션",
+        schedule: "2025.12 (3주)",
+        member: "FullStack 2명",
+        role: "FullStack 개발, DB 설계, 웹 IDE 기능 구현",
         features: [
-            "실시간 코드 실행 및 채점",
-            "문제 풀이 및 제출 이력 관리",
-            "실시간 채팅 (WebSocket)",
-            "관리자 문제 등록 시스템"
+            "실시간 코드 실행 및 마크다운 메모",
+            "문제 크롤링 및 화면 구성",
+            "문제 풀이를 돕는 AI 챗봇"
         ]
     }
 };
@@ -105,15 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Let's keep it simple for now, or maybe add it to the date line.
                 modalDate.textContent = `${data.institution} | ${data.date}`;
 
-                let architectureContent = '';
+                let architectureSection = '';
                 if (data.image) {
-                    architectureContent = `<img src="${data.image}" alt="${data.title} Architecture" class="architecture-image">`;
-                } else {
-                    architectureContent = `
-                        <div class="architecture-placeholder">
-                            ${data.architecture.replace(/\n/g, '<br>')}
-                            <br><br>(아키텍처 이미지 준비중)
-                        </div>
+                    architectureSection = `
+                    <div class="project-detail-section">
+                        <h4>아키텍처</h4>
+                        <img src="${data.image}" alt="${data.title} Architecture" class="architecture-image">
+                    </div>
                     `;
                 }
 
@@ -157,15 +150,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     
-                    <div class="project-detail-section">
-                        <h4>아키텍처</h4>
-                        ${architectureContent}
-                    </div>
+                    ${architectureSection}
                 `;
 
                 modalBody.innerHTML = contentHtml;
                 modal.style.display = 'block';
                 document.body.style.overflow = 'hidden'; // Prevent background scrolling
+
+                // Add event listener to the image for zooming
+                const archImg = modalBody.querySelector('.architecture-image');
+                if (archImg) {
+                    archImg.addEventListener('click', () => {
+                        const zoomModal = document.getElementById('image-zoom-modal');
+                        const zoomImg = document.getElementById('zoomed-image');
+                        zoomImg.src = archImg.src;
+                        zoomModal.style.display = 'flex'; // Use flex for centering
+                    });
+                }
             }
         });
     });
@@ -181,4 +182,20 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = 'auto';
         }
     });
+
+    // Image Zoom Modal Event Listeners
+    const zoomModal = document.getElementById('image-zoom-modal');
+    if (zoomModal) {
+        const closeZoomBtn = document.querySelector('.close-zoom-button');
+
+        closeZoomBtn.addEventListener('click', () => {
+            zoomModal.style.display = 'none';
+        });
+
+        zoomModal.addEventListener('click', (event) => {
+            if (event.target === zoomModal) {
+                zoomModal.style.display = 'none';
+            }
+        });
+    }
 });
