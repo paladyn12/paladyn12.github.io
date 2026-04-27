@@ -114,16 +114,6 @@ const projectData = {
                 title: "AI 챗봇 연동",
                 description: "프롬프트를 미리 설계하여 힌트 보기, 내 코드 분석 등 학습에 유용한 질의를 AI 챗봇에 바로 요청할 수 있습니다."
             }
-        ],
-        troubleshooting: [
-            {
-                placeholder: true,
-                title: "트러블슈팅 1 — 추가 예정"
-            },
-            {
-                placeholder: true,
-                title: "트러블슈팅 2 — 추가 예정"
-            }
         ]
     },
     project1: {
@@ -189,10 +179,6 @@ const projectData = {
                 problem: "서버 비용을 최소화하기 위해 초기에는 별도의 미디어 서버 없이 참여자들이 직접 P2P 연결하는 Mesh 구조로 WebRTC 환경을 구축했습니다. Mesh 구조는 참여자 수(N)가 늘어날수록 연결 수가 N(N-1)/2 으로 급격히 증가하며, 각 클라이언트가 모든 참여자에게 별도의 스트림을 업로드해야 합니다. 실제 테스트에서 참여자 5명 이상부터 클라이언트 CPU 사용률이 65% 이상으로 치솟고 영상이 끊기는 문제가 발생했습니다.",
                 solution: "오픈소스 WebRTC SFU 서버인 LiveKit을 도입했습니다. SFU(Selective Forwarding Unit) 구조에서는 각 클라이언트가 서버에만 스트림을 전송하고, 서버가 이를 다른 참여자에게 선택적으로 포워딩합니다. 클라이언트당 업스트림 연결이 단 1개로 고정되어, 참여자 수가 늘어도 클라이언트 부하 증가가 선형적으로만 증가합니다.",
                 result: "5인 기준 클라이언트 평균 CPU 사용률이 약 65%에서 22% 수준으로 감소했습니다. 영상 프레임 드롭률도 35% 이상에서 5% 미만으로 개선되어, 10인 이상의 스터디에서도 안정적인 화상 통화가 가능해졌습니다."
-            },
-            {
-                placeholder: true,
-                title: "트러블슈팅 2 — 추가 예정"
             }
         ]
     }
@@ -348,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <button class="tab-btn active" data-tab="overview">개요</button>
                             <button class="tab-btn" data-tab="background">배경</button>
                             <button class="tab-btn" data-tab="features">기능 소개</button>
-                            <button class="tab-btn" data-tab="troubleshooting">트러블슈팅</button>
+                            ${data.troubleshooting && data.troubleshooting.length > 0 ? '<button class="tab-btn" data-tab="troubleshooting">트러블슈팅</button>' : ''}
                         </div>
                         <div class="tab-panel active" id="tab-overview">
                             ${renderOverviewTab(data)}
@@ -359,9 +345,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="tab-panel" id="tab-features">
                             ${renderFeaturesTab(data.detailedFeatures)}
                         </div>
+                        ${data.troubleshooting && data.troubleshooting.length > 0 ? `
                         <div class="tab-panel" id="tab-troubleshooting">
                             ${renderTroubleshootingTab(data.troubleshooting)}
                         </div>
+                        ` : ''}
                     `;
                 } else {
                     let architectureSection = '';
