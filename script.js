@@ -121,10 +121,10 @@ const projectData = {
         date: "2026.01 - 2026.02 (6주)",
         institution: "SSAFY",
         overview: "스터디 그룹의 출결, 학습 시간, 벌금 정산 등 운영 업무를 자동화하여 방장과 구성원 모두가 학습에 집중할 수 있는 환경을 제공하는 플랫폼",
-        tech: ["Java", "Spring", "Vue.js", "MySQL", "Spring Data JPA", "WebRTC (Livekit)", "WebSocket", "Docker", "Jenkins"],
+        tech: ["Java", "Spring", "Vue.js", "MySQL", "Spring Data JPA", "WebRTC (Livekit)", "WebSocket", "Docker", "Jenkins", "Redis"],
         image: "assets/img/study_architecture.png",
         schedule: "2026.01 - 2026.02 (6주)",
-        member: "Infra 1명, Backend 4명, Frontend 1명",
+        member: "PM 1명, Backend 2명, Frontend 2명, Infra 1명",
         role: "Backend 개발, ERD 설계 및 WebRTC 환경 구축",
         features: [
             "출결 관리, 벌금 정산 등 스터디 운영 관리 자동화",
