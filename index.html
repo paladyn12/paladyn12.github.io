@@ -10,13 +10,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
 </head>
 
 <body>
     <header class="header">
         <div class="container">
             <h1>Backend Developer</h1>
-            <p class="subtitle">who is continuously learning and growing</p>
         </div>
     </header>
 
@@ -61,13 +61,12 @@
                 <div class="resume-item">
                     <h3>상명대학교(서울) 컴퓨터과학전공</h3>
                     <p class="date">2019.03 - 2025.08</p>
-                    <p class="description">학점: 전공 4.36 / 4.5 (전체 4.27 / 4.5)</p>
+                    <p class="description">학점: 전공 4.36 / 4.5 (전체 4.27 / 4.5 )</p>
                 </div>
                 <div class="resume-item">
-                    <h3>어학 및 SW 역량</h3>
+                    <h3>어학</h3>
                     <ul class="list">
                         <li>Toeic Speaking Level 7 (AL)</li>
-                        <li>삼성 SW 역량 테스트 B형 (Professional)</li>
                     </ul>
                 </div>
                 <div class="resume-item">
@@ -75,6 +74,7 @@
                     <ul class="list">
                         <li>SQLD (2024.12.13)</li>
                         <li>정보처리기사 (2025.06.13)</li>
+                        <li>삼성 SW 역량 테스트 B형 (2025.08.23)</li>
                     </ul>
                 </div>
             </div>
@@ -83,15 +83,65 @@
         <!-- Skills -->
         <section id="skills" class="section">
             <h2 class="section-title">Tech Stack</h2>
-            <div class="skills-container">
-                <span class="skill-tag">JAVA</span>
-                <span class="skill-tag">Spring</span>
-                <span class="skill-tag">SQL</span>
-                <span class="skill-tag">Git</span>
-                <span class="skill-tag">Docker</span>
-                <span class="skill-tag">Pyhton</span>
-                <span class="skill-tag">LangChain</span>
-                <span class="skill-tag">LangGraph</span>
+            <div class="skill-table">
+                <div class="skill-row">
+                    <div class="skill-row-label">
+                        <span>Language</span>
+                    </div>
+                    <div class="skill-chips">
+                        <div class="skill-chip"><i class="devicon-java-plain colored"></i><span>Java</span></div>
+                        <div class="skill-chip"><i class="devicon-kotlin-plain colored"></i><span>Kotlin</span></div>
+                        <div class="skill-chip"><i class="devicon-python-plain colored"></i><span>Python</span></div>
+                    </div>
+                </div>
+                <div class="skill-row">
+                    <div class="skill-row-label">
+                        <span>Backend</span>
+                    </div>
+                    <div class="skill-chips">
+                        <div class="skill-chip"><i class="devicon-spring-plain colored"></i><span>Spring Boot</span>
+                        </div>
+                        <div class="skill-chip"><i class="devicon-spring-plain colored"></i><span>Spring MVC</span>
+                        </div>
+                        <div class="skill-chip"><i class="devicon-spring-plain colored"></i><span>Spring Data JPA</span>
+                        </div>
+                        <div class="skill-chip"><i class="devicon-mybatis-plain colored"></i><span>Mybatis</span></div>
+                        <div class="skill-chip"><i class="devicon-fastapi-plain colored"></i><span>FastAPI</span></div>
+                    </div>
+                </div>
+                <div class="skill-row">
+                    <div class="skill-row-label">
+                        <span>Frontend</span>
+                    </div>
+                    <div class="skill-chips">
+                        <div class="skill-chip"><i class="devicon-vuejs-plain colored"></i><span>Vue.js</span></div>
+                        <div class="skill-chip"><i class="devicon-jsp-plain colored"></i><span>JSP</span></div>
+                        <div class="skill-chip"><i class="devicon-html5-plain colored"></i><span>HTML</span></div>
+                        <div class="skill-chip"><i class="devicon-css3-plain colored"></i><span>CSS</span></div>
+                        <div class="skill-chip"><i class="devicon-javascript-plain colored"></i><span>JavaScript</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-row">
+                    <div class="skill-row-label">
+                        <span>Database</span>
+                    </div>
+                    <div class="skill-chips">
+                        <div class="skill-chip"><i class="devicon-mysql-plain colored"></i><span>MySQL</span></div>
+                        <div class="skill-chip"><i class="devicon-mariadb-plain colored"></i><span>MariaDB</span>
+                        </div>
+                        <div class="skill-chip"><i class="devicon-redis-plain colored"></i><span>Redis</span></div>
+                    </div>
+                </div>
+                <div class="skill-row">
+                    <div class="skill-row-label">
+                        <span>Infra</span>
+                    </div>
+                    <div class="skill-chips">
+                        <div class="skill-chip"><i class="devicon-docker-plain colored"></i><span>Docker</span></div>
+                        <div class="skill-chip"><i class="devicon-jenkins-plain colored"></i><span>Jenkins</span></div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -151,12 +201,6 @@
             </div>
         </section>
     </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Kim Taewan. All rights reserved.</p>
-        </div>
-    </footer>
 
     <!-- Modal -->
     <div id="project-modal" class="modal">
