@@ -222,8 +222,8 @@ function renderOverviewTab(data) {
         </div>
         <div class="project-detail-section">
             <h4>사용 기술</h4>
-            <div class="skills-container">
-                ${data.tech.map(t => `<span class="skill-tag">${t}</span>`).join('')}
+            <div class="skill-chips">
+                ${data.tech.map(t => `<span class="skill-chip">${t}</span>`).join('')}
             </div>
         </div>
         ${architectureSection}
