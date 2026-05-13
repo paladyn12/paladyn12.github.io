@@ -4,15 +4,17 @@ const projectData = {
         date: "2026.02.19 - 2026.04.03 (7주)",
         institution: "삼성전자 네트워크 사업부",
         confidential: true,
-        overview: "시장품질그룹의 엑셀 기반 반복 업무를 자동화하고, 수리·불량 데이터를 DBMS로 통합 관리하여 LLM Agent 기반의 깊이 있는 인사이트 도출과 보고서 자동화를 제공하는 AX 플랫폼",
-        tech: ["Python", "FastAPI", "Streamlit", "LangChain", "LangGraph", "MariaDB"],
+        overview: "시장품질그룹의 엑셀 기반 반복 업무를 자동화하고, 수리·불량 데이터를 DBMS로 통합 관리하는 마이크로서비스 AX 플랫폼. Chatbot(자연어 DB 조회), Report(AI 자동 보고서), Reclassify(RAG 기반 증상 재분류), Repairguide(벡터 검색 기반 수리 가이드) 4개의 AI 서비스로 구성",
+        tech: ["Python", "FastAPI", "React", "LangGraph", "LangChain", "MariaDB", "Milvus", "SQLAlchemy", "Docker"],
         schedule: "2026.02 - 2026.04 (7주)",
         member: "PM 1명, Backend 3명, Frontend 1명, Infra 1명",
-        role: "인프라 구축, Schema 설계, DB 적재 Agent 개발",
+        role: "인프라 구축, Schema 설계, DB 적재 서비스 개발",
         features: [
-            "DB 적재 Agent 개발",
-            "Q&A Agent 개발",
-            "Report Agent 개발"
+            "고객사별 컬럼 매핑 기반 Excel/CSV 자동 파싱 및 DB 적재",
+            "자연어 Q&A Chatbot (Orchestrator-Subagent 멀티에이전트, SSE 스트리밍)",
+            "AI 기반 품질 보고서 자동 생성 및 이메일 발송 (LangGraph 파이프라인)",
+            "RAG 기반 '기타' 증상 자동 재분류 (Milvus + BM25 하이브리드 검색)",
+            "벡터 검색 기반 수리 가이드 생성 및 수리 문서 제공"
         ],
         hasDetailedTabs: true,
         background: {
@@ -30,36 +32,47 @@ const projectData = {
         },
         detailedFeatures: [
             {
-                title: "DB 적재 Agent",
-                description: "시장품질그룹에서 사용하는 엑셀·CSV 파일을 자동으로 파싱·변환하여 DB에 적재합니다. 기존의 수작업 문서 처리를 자동화하여 반복 업무 부담을 대폭 줄입니다."
+                title: "DB 적재 서비스 (Backend)",
+                description: "고객사마다 컬럼명이 다른 Excel·CSV 파일을 DB의 InventoryMapping 테이블 기반으로 자동 변환하여 적재합니다. 새 고객사 추가 시 코드 수정 없이 매핑 테이블 등록만으로 처리되며, 매핑이 없으면 Default 매핑으로 자동 폴백합니다. LOAD DATA LOCAL INFILE과 배치 INSERT 폴백을 조합해 대용량 데이터도 안정적으로 처리합니다."
             },
             {
-                title: "Q&A Agent",
-                description: "DBMS에 저장된 수리·불량 데이터를 기반으로 자연어 질의응답을 제공합니다. 비개발 직군도 SQL 없이 데이터에서 인사이트를 얻을 수 있습니다."
+                title: "자연어 Q&A Chatbot",
+                description: "Orchestrator → SQL Expert / Visualizer 구조의 멀티에이전트로 구현했습니다. SQL Expert는 list_tables → get_schema → sql_db_query 순서로 스키마를 확인한 뒤 think_tool로 쿼리 로직을 자기 검증하고 실행합니다. SSE 스트리밍으로 AI 사고 과정을 단계별로 렌더링하며, LangGraph의 AsyncSqliteSaver를 체크포인터로 사용해 thread_id 기반 멀티턴 대화를 유지합니다."
             },
             {
-                title: "Report Agent",
-                description: "집계 데이터를 바탕으로 정형화된 품질 보고서를 자동 생성합니다. 기존에 직원이 수작업으로 작성하던 보고서를 자동화합니다."
+                title: "AI 자동 보고서 생성 (Report)",
+                description: "LangGraph 파이프라인(Intent Analysis → Query Planning → Data Retrieval → Analysis → Deep Dive Loop → Report Assembly)으로 구현됩니다. 이상치 탐지(MoM, YoY, 선형 회귀 기울기 등)는 pandas/numpy가 전담하고 LLM은 문장 생성만 맡아 환각을 방지합니다. 비동기 백그라운드 태스크로 실행되며 완료 시 DOCX 보고서를 이메일로 자동 발송합니다."
             },
             {
-                title: "수리·불량 처리 지원",
-                description: "수리 이력 및 불량 유형 데이터를 조회하고 처리 현황을 분석하는 기능을 제공합니다."
+                title: "RAG 기반 증상 재분류 (Reclassify)",
+                description: "'기타'/'기타 불량'으로 등록된 RMA 증상을 AI가 자동으로 적절한 카테고리로 재분류합니다. Milvus 벡터 검색과 BM25 키워드 검색을 RRF(Reciprocal Rank Fusion)로 융합하고 CrossEncoder로 재채점합니다. 도메인 특화 기술 용어 매칭을 위해 BM25(0.7) : 벡터(0.3) 가중치를 적용했으며, GaussLLM이 후보 5개 중 최적 카테고리를 선택합니다."
+            },
+            {
+                title: "수리 가이드 생성 (Repairguide)",
+                description: "장비 시리얼과 불량 증상을 입력하면 Milvus에서 4채널 하이브리드 검색(증상 Dense 0.50 / BM25 Sparse 0.25 / 전체 문맥 Dense 0.20 / 수리 결과 Dense 0.05)으로 유사 수리 사례 5건을 검색합니다. LangGraph 파이프라인이 사례와 제품 정보를 컨텍스트로 조합해 LLM 수리 가이드를 생성하고, 관련 수리 문서(DOCX) 다운로드 링크를 함께 제공합니다."
             }
         ],
         troubleshooting: [
             {
                 title: "대용량 데이터 적재 성능 문제",
-                tags: ["MariaDB", "LOAD DATA INFILE", "Bulk Insert", "성능 최적화"],
-                problem: "적재해야 할 데이터 양이 매우 많아, 행 단위 INSERT 방식으로는 적재 시간이 지나치게 오래 걸렸습니다. 50만 건 기준 행 단위 INSERT 처리 시 20분 이상이 소요되어 실사용이 어려운 수준이었습니다.",
-                solution: "업로드된 CSV 파일을 DB 테이블 스키마에 맞춰 전처리한 임시 파일로 변환한 뒤, MariaDB의 LOAD DATA INFILE 명령을 활용해 파일을 서버에서 직접 bulk import하는 방식으로 전환했습니다. 이 방식은 클라이언트-서버 간 네트워크 왕복 없이 서버 측에서 파일을 직접 읽어 적재하기 때문에, 행 단위 방식 대비 월등히 빠른 처리가 가능합니다.",
-                result: "50만 건 기준 적재 시간이 20분 이상에서 5분 내외로 단축되어 약 4배의 성능 개선을 달성했습니다. 실무에서 다루는 대용량 파일도 실질적인 대기 부담 없이 적재가 가능해졌습니다."
+                tags: ["MariaDB", "LOAD DATA LOCAL INFILE", "Bulk Insert", "성능 최적화"],
+                problem: "수십만 건의 Inventory 데이터를 배치 INSERT로 처리하면 SQL 파싱과 트랜잭션 오버헤드가 누적됩니다. 50만 건 기준 배치 INSERT 처리 시 20분 이상이 소요되어 실사용이 어려운 수준이었습니다.",
+                solution: "pandas DataFrame을 임시 CSV 파일로 변환한 뒤 MariaDB의 LOAD DATA LOCAL INFILE 명령으로 서버 측에서 직접 파일을 읽어 적재하는 방식으로 전환했습니다. SQLAlchemy 엔진 URL에 local_infile=1 옵션을 추가하고 raw cursor로 실행했으며, LOAD DATA INFILE이 실패하는 환경을 대비해 10,000건 단위 배치 INSERT 폴백 로직도 함께 구현했습니다.",
+                result: "50만 건 기준 적재 시간이 20분 이상에서 5분 내외로 단축되어 약 4배의 성능 개선을 달성했습니다."
             },
             {
-                title: "다중 Agent 환경에서의 조회 성능 문제",
-                tags: ["MariaDB", "Index", "집계 테이블", "쿼리 최적화"],
-                problem: "여러 Agent가 하나의 DB에서 동시에 데이터를 조회하는 상황에서 조회 성능이 중요했습니다. 그러나 데이터가 누적될수록 복합 조건 필터나 피벗 형태의 집계 쿼리에 JOIN·정렬이 수반되어, 조건이 조금만 추가되어도 응답 시간이 수십 초로 길어지는 문제가 발생했습니다.",
-                solution: "각 Agent가 자주 조회하는 컬럼 조합을 분석하여 복합 인덱스를 추가했습니다. 또한 Agent들이 가장 빈번하게 참조하는 피벗 형태의 집계 데이터를 미리 계산해두는 집계 테이블을 설계하여, 기존에 실시간으로 JOIN·GROUP BY가 수반되던 복잡한 쿼리를 단순 SELECT로 처리할 수 있도록 개선했습니다.",
-                result: "복합 인덱스 도입으로 조건 조회 쿼리 실행 시간이 평균 약 85% 감소하였으며, 집계 테이블 적용 후 주요 리포트 쿼리 응답 시간이 약 22초에서 1초 미만으로 단축되어 실시간 응답에 준하는 수준으로 개선되었습니다."
+                title: "불량률 집계 조회 68초 → 0.1초",
+                tags: ["MariaDB", "Materialized Table", "Stored Procedure", "쿼리 최적화"],
+                problem: "불량률 조회 View(v_monthly_defect_rate)는 내부에서 Inventory와 RMA 전체를 집계하는 두 뷰를 JOIN하는 구조였습니다. 뷰는 매 조회마다 서브쿼리를 실행하기 때문에, 데이터가 누적될수록 응답 시간이 68초까지 늘어나 실사용이 불가능한 수준이었습니다.",
+                solution: "Materialized Table 패턴을 적용했습니다. monthly_defect_rate_aggregated 집계 전용 테이블을 두고, 데이터 업로드 후 CALL refresh_monthly_defect_rate_aggregated() Stored Procedure를 호출하여 수동 갱신하는 방식으로 전환했습니다. 조회 시에는 이 테이블을 단순 SELECT하도록 래핑 뷰를 구성했습니다. 실시간 갱신이 불필요하고 업로드 후 별도 refresh 호출이 필요하다는 트레이드오프를 팀과 합의했습니다.",
+                result: "조회 응답 시간이 68초에서 0.1초로 단축되어 <strong>665배 성능 개선</strong>을 달성했습니다."
+            },
+            {
+                title: "Chatbot 단일 에이전트 도구 혼용 문제 → Orchestrator-Subagent 전환",
+                tags: ["LangGraph", "Multi-Agent", "Orchestrator", "LLM 설계"],
+                problem: "초기에는 단일 에이전트에 SQL 도구와 시각화 도구를 모두 제공했습니다. 컨텍스트가 길어질수록 LLM이 도구를 혼동하거나 불필요한 도구를 연달아 호출하는 문제가 발생했고, 에이전트가 SQL을 직접 작성하다가 잘못된 쿼리를 실행하는 사고도 반복되었습니다.",
+                solution: "Orchestrator → SQL Expert / Visualizer 구조의 멀티에이전트로 재설계했습니다. 오케스트레이터는 의도 파악과 서브에이전트 위임만 담당하고, SQL Expert는 스키마 탐색 후 think_tool로 쿼리 로직을 자기 검증한 뒤 실행하도록 역할을 분리했습니다. SQL Expert에게는 SELECT 전용 읽기 제약도 적용하여 의도치 않은 데이터 변경을 방지했습니다.",
+                result: "각 에이전트의 시스템 프롬프트가 짧고 명확해져 도구 혼용 오류가 해소되었습니다. think_tool을 통한 자기 검증으로 잘못된 쿼리 실행 빈도도 크게 줄었습니다."
             }
         ]
     },
@@ -120,17 +133,19 @@ const projectData = {
         title: "AI 기반 온라인 스터디 관리 자동화 플랫폼",
         date: "2026.01 - 2026.02 (6주)",
         institution: "SSAFY",
-        overview: "스터디 그룹의 출결, 학습 시간, 벌금 정산 등 운영 업무를 자동화하여 방장과 구성원 모두가 학습에 집중할 수 있는 환경을 제공하는 플랫폼",
-        tech: ["Java", "Spring", "Vue.js", "MySQL", "Spring Data JPA", "WebRTC (Livekit)", "WebSocket", "Docker", "Jenkins", "Redis"],
+        overview: "스터디 그룹의 출결, 학습 시간, 벌금 정산 등 운영 업무를 자동화하고, LiveKit SFU 기반 화상 스터디와 AI 비속어 필터링·챗봇을 통해 방장과 구성원 모두가 학습에 집중할 수 있는 환경을 제공하는 플랫폼",
+        tech: ["Java", "Spring Boot", "Vue.js", "MySQL", "Redis", "MongoDB", "WebRTC (LiveKit)", "WebSocket", "RabbitMQ", "Docker", "Jenkins"],
         image: "assets/img/study_architecture.png",
         schedule: "2026.01 - 2026.02 (6주)",
         member: "PM 1명, Backend 2명, Frontend 2명, Infra 1명",
-        role: "Backend 개발, ERD 설계 및 WebRTC 환경 구축",
+        role: "WebRTC(LiveKit) 기반 화상 스터디 기능 구현, DB 스키마 설계",
         features: [
-            "출결 관리, 벌금 정산 등 스터디 운영 관리 자동화",
-            "WebRTC 기반 화상 스터디",
-            "스터디 스트리밍 및 채팅 기능",
-            "AI 기반 공석 감지 및 비속어 필터링"
+            "스터디 생성/탐색 및 라이프사이클 자동 전이 (PENDING → IN_PROGRESS → ENDED)",
+            "보증금/벌금 자동 정산 및 정상 출석자 리워드 균등 분배",
+            "출결 및 공부 시간 자동 집계",
+            "LiveKit SFU 기반 스터디윗미 (라이브 화상 스터디)",
+            "실시간 채팅 (Redis 버퍼링 → MongoDB 이관) + AI 비속어 필터링",
+            "AI 챗봇 (4가지 페르소나, LLM 기반 응원/꾸중 봇)"
         ],
         hasDetailedTabs: true,
         background: {
@@ -148,37 +163,55 @@ const projectData = {
         },
         detailedFeatures: [
             {
-                title: "WebRTC 기반 화상 스터디",
-                description: "LiveKit SFU 서버를 기반으로 안정적인 다인 화상 통화를 제공합니다. 참여자 수가 증가해도 통화 품질이 저하되지 않습니다."
+                title: "스터디 관리 및 라이프사이클 자동화",
+                description: "스터디 요일을 비트마스크로 저장하고, 스케줄러가 1분마다 PENDING → IN_PROGRESS → ENDED 상태를 자동 전이합니다. 제목·카테고리·시작 시간·목표 시간·보증금·인원 수 복합 필터와 페이지네이션으로 스터디를 탐색할 수 있습니다."
             },
             {
-                title: "자동 출결 체크",
-                description: "스터디 입장 시 출결이 자동으로 기록됩니다. 방장이 별도로 확인하거나 기록할 필요가 없습니다."
+                title: "보증금 & 벌금 자동 정산",
+                description: "퇴실 시간 +1분 후 스케줄러가 자동 실행됩니다. 결석은 minDeposit 전액, 지각은 latePenalty 고정 벌금, 목표 시간 미충족은 ceil(부족시간/단위시간) × 단위금액으로 계산합니다. 걷힌 벌금은 정상 출석자에게 균등 분배(나머지 1원은 랜덤 배분)하며, 보증금이 부족한 멤버는 자동 강퇴 처리됩니다. 당일 정산 이력 조회로 스케줄러의 멱등성을 보장합니다."
             },
             {
-                title: "공부 시간 자동 집계",
-                description: "스터디 참여 시간이 실시간으로 기록되어 누적 학습 시간을 언제든 확인할 수 있습니다."
+                title: "출결 & 공부 시간 자동 집계",
+                description: "체크인 시간 기준으로 지각 여부를 판단하고, 공부 시간은 클라이언트가 주기적으로 서버에 저장합니다. 정산 후 당일 출석 이력은 히스토리 테이블로 이관되어 누적 관리됩니다."
             },
             {
-                title: "AI 기반 공석 감지",
-                description: "MediaPipe Task Vision의 객체 감지 모델을 활용해 사용자 카메라 화면을 분석합니다. 사람이 감지되지 않으면 학습 시간 집계를 자동으로 일시 정지합니다."
+                title: "실시간 알림 (STOMP + RabbitMQ)",
+                description: "스케줄러가 입실 10분 전 대상자에게 STOMP 푸시 알림을 전송하고, 정산 완료 직후 멤버별 결과(보상/벌금/강퇴)를 실시간으로 전송합니다. 외부 브로커인 RabbitMQ를 사용하여 서버 수평 확장 시에도 메시지 수신이 가능하도록 설계했습니다. 알림은 DB에도 영구 저장되어 미접속 사용자도 나중에 조회할 수 있습니다."
             },
             {
-                title: "벌금 자동 정산",
-                description: "출결 및 학습 시간 기준에 따라 벌금이 자동 계산됩니다. 정산 결과는 스터디 종료 후 즉시 확인할 수 있습니다."
+                title: "스터디윗미 (LiveKit SFU 화상 스터디)",
+                description: "Spring이 LiveKit에 Room을 생성하고 JWT 토큰을 발급하면, 클라이언트가 토큰으로 LiveKit SFU에 직접 WebRTC 연결하는 구조입니다. 시청자 수는 Redis로 집계하고 STOMP로 전체 구독자에게 브로드캐스트합니다. LiveKit은 SFU + TURN 서버를 단일 Docker 이미지에 내장하여 EC2 방화벽 환경에서도 WebRTC 연결이 가능합니다."
             },
             {
-                title: "실시간 채팅",
-                description: "WebSocket 기반 실시간 채팅으로 스터디 중에도 구성원과 원활하게 소통할 수 있습니다."
+                title: "실시간 채팅 & AI 비속어 필터링",
+                description: "방송 중 채팅 메시지는 Redis에 임시 저장하고, 방송 종료 시 MongoDB로 벌크 이관합니다. 채팅은 JOIN이 없는 시간순 조회만 필요하므로 MongoDB 도큐먼트 모델이 적합합니다. KcELECTRA 한국어 모델 + ONNX Runtime으로 비속어를 감지하며, 독성 점수 0.7 이상 시 메시지를 자동으로 숨깁니다."
+            },
+            {
+                title: "AI 스터디 챗봇",
+                description: "방송 중 결석·타이머 이벤트를 트리거로 SEED LLM이 응원/꾸중 메시지를 자동 생성합니다. 엄마(MOM) / 선생님(TEACHER) / 친구(FRIEND) / 잼민이(KID) 4가지 페르소나 중 선택 가능하며, 칭찬 봇/꾸중 봇을 각각 ON/OFF로 설정할 수 있습니다. LLM 서버는 Spring API 서버와 분리(FastAPI)하여 추론 부하가 핵심 API에 영향을 주지 않도록 설계했습니다."
             }
         ],
         troubleshooting: [
             {
                 title: "WebRTC 성능 저하 — Mesh 구조에서 SFU로 전환",
                 tags: ["WebRTC", "LiveKit", "SFU", "성능 최적화"],
-                problem: "서버 비용을 최소화하기 위해 초기에는 별도의 미디어 서버 없이 참여자들이 직접 P2P 연결하는 Mesh 구조로 WebRTC 환경을 구축했습니다. Mesh 구조는 참여자 수(N)가 늘어날수록 연결 수가 N(N-1)/2 으로 급격히 증가하며, 각 클라이언트가 모든 참여자에게 별도의 스트림을 업로드해야 합니다. 실제 테스트에서 참여자 5명 이상부터 클라이언트 CPU 사용률이 65% 이상으로 치솟고 영상이 끊기는 문제가 발생했습니다.",
-                solution: "오픈소스 WebRTC SFU 서버인 LiveKit을 도입했습니다. SFU(Selective Forwarding Unit) 구조에서는 각 클라이언트가 서버에만 스트림을 전송하고, 서버가 이를 다른 참여자에게 선택적으로 포워딩합니다. 클라이언트당 업스트림 연결이 단 1개로 고정되어, 참여자 수가 늘어도 클라이언트 부하 증가가 선형적으로만 증가합니다.",
-                result: "5인 기준 클라이언트 평균 CPU 사용률이 약 65%에서 22% 수준으로 감소했습니다. 영상 프레임 드롭률도 35% 이상에서 5% 미만으로 개선되어, 10인 이상의 스터디에서도 안정적인 화상 통화가 가능해졌습니다."
+                problem: "서버 비용을 최소화하기 위해 초기에는 별도의 미디어 서버 없이 참여자들이 직접 P2P 연결하는 Mesh 구조로 WebRTC 환경을 구축했습니다. Mesh 구조는 참여자 수(N)가 늘어날수록 연결 수가 N(N-1)/2으로 급격히 증가하며, 각 클라이언트가 모든 참여자에게 별도의 스트림을 업로드해야 합니다. 실제 테스트에서 참여자 5명 이상부터 클라이언트 CPU 사용률이 65% 이상으로 치솟고 영상이 끊기는 문제가 발생했습니다.",
+                solution: "오픈소스 WebRTC SFU 서버인 LiveKit을 도입했습니다. SFU 구조에서는 각 클라이언트가 서버에만 스트림을 전송하고 서버가 이를 다른 참여자에게 선택적으로 포워딩합니다. 클라이언트당 업스트림 연결이 단 1개로 고정되어, 참여자 수가 늘어도 클라이언트 부하가 선형으로만 증가합니다. LiveKit은 SFU + TURN 서버를 단일 Docker 이미지에 내장하고 있어 EC2 방화벽 환경에서의 WebRTC 연결 실패도 함께 해결했습니다.",
+                result: "5인 기준 클라이언트 평균 CPU 사용률이 약 65%에서 22% 수준으로 감소했습니다. 영상 프레임 드롭률도 35% 이상에서 5% 미만으로 개선되어, 10인 이상 스터디에서도 안정적인 화상 통화가 가능해졌습니다."
+            },
+            {
+                title: "백그라운드 탭 전환 시 AI 감지 및 타이머 중단 문제",
+                tags: ["MediaPipe", "Browser API", "WebRTC", "AI 감지"],
+                problem: "브라우저에서 탭을 백그라운드로 전환하면 자바스크립트 실행 속도를 크게 제한하는 정책이 적용됩니다. AI 공석 감지는 매 프레임마다 화면을 분석해야 하는데, 이 정책으로 인해 감지 로직이 제대로 실행되지 않았습니다. 공부 중 다른 탭으로 전환하는 상황은 실사용에서 충분히 발생할 수 있어 문제가 됐습니다.",
+                solution: "감지 로직을 시간 기반 인터벌 방식에서 비디오 프레임 도착 이벤트 기반으로 전환했습니다. 비디오 스트림 자체는 백그라운드에서도 WebRTC를 통해 계속 수신되기 때문에, 프레임이 도착할 때마다 감지 로직이 실행되도록 수정하여 브라우저의 실행 속도 제한을 우회했습니다.",
+                result: "백그라운드 탭 상태에서도 AI 공석 감지와 타이머가 정상적으로 동작하게 되었습니다."
+            },
+            {
+                title: "실시간 채팅 DB 부하 문제 → Redis 버퍼링 + MongoDB 이관",
+                tags: ["Redis", "MongoDB", "채팅", "성능 최적화"],
+                problem: "방송 중 채팅 메시지를 MySQL에 직접 INSERT하면, 활성 방송이 여러 개일 때 초당 수십 건의 쓰기가 메인 DB에 집중됩니다. 스터디 정산, 출결 처리 등 핵심 트랜잭션이 실행되는 메인 DB에 부하가 집중되는 구조적 문제였습니다.",
+                solution: "방송 중에는 Redis 인메모리에만 메시지를 저장하고(지연 없음), 방송 종료 이벤트 시점에 Redis 전체 메시지를 MongoDB로 벌크 이관한 뒤 Redis 키를 삭제하는 방식으로 전환했습니다. 채팅 데이터는 JOIN이 없는 시간순 조회만 필요하므로 RDB보다 MongoDB 도큐먼트 모델이 적합합니다. 단, 서버가 방송 종료 전에 다운되면 Redis 데이터가 유실될 수 있는 트레이드오프가 있습니다.",
+                result: "메인 DB 부하가 해소되었고, 채팅 쓰기 지연이 사실상 사라졌습니다."
             }
         ]
     }

@@ -170,6 +170,7 @@ a:hover {
     display: flex;
     align-items: flex-start;
     gap: 0;
+    width: 100%;
     border: 1px solid var(--border-color);
     border-radius: 10px;
     overflow: hidden;
