@@ -7,8 +7,8 @@ const projectData = {
         overview: "삼성전자 네트워크사업부의 글로벌 통신사 기지국 장비 운용(Inventory) 및 불량(RMA) 데이터를 수집·처리·분석하는 마이크로서비스 AX 플랫폼. Chatbot(자연어 DB 조회), Report(AI 자동 보고서), Reclassify(RAG 기반 증상 재분류), Repairguide(벡터 검색 기반 수리 가이드) 4개의 AI 서비스로 구성",
         tech: ["Python", "FastAPI", "React", "LangGraph", "LangChain", "MariaDB", "Milvus", "SQLAlchemy", "Docker"],
         schedule: "2026.02 - 2026.04 (7주)",
-        member: "PM 1명, Backend 3명, Frontend 1명, Infra 1명",
-        role: "인프라 구축, Schema 설계, DB 적재 파이프라인 구축, LLM Agent 설계",
+        member: "Backend 1명, Frontend 1명, AI 4명",
+        role: "개발 인프라 구축, Schema 설계, DB 적재 파이프라인 구축",
         features: [
             "대용량 데이터 업로드: 고객사별 Excel/CSV 컬럼 자동 매핑 후 Inventory·RMA 데이터 MariaDB 적재",
             "불량률 대시보드: 월별 제품군 불량률 집계 조회",
