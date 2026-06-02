@@ -1,14 +1,14 @@
 const projectData = {
     project4: {
         title: "시장 품질 데이터 처리 플랫폼",
-        date: "2026.02.19 - 2026.04.03 (7주)",
+        date: "2026.02 - 2026.04 (6주)",
         institution: "삼성전자 네트워크 사업부",
         confidential: true,
         overview: "삼성전자 네트워크사업부의 글로벌 통신사 기지국 장비 운용(Inventory) 및 불량(RMA) 데이터를 수집·처리·분석하는 마이크로서비스 AX 플랫폼. Chatbot(자연어 DB 조회), Report(AI 자동 보고서), Reclassify(RAG 기반 증상 재분류), Repairguide(벡터 검색 기반 수리 가이드) 4개의 AI 서비스로 구성",
         tech: ["Python", "FastAPI", "React", "LangGraph", "LangChain", "MariaDB", "Milvus", "SQLAlchemy", "Docker"],
-        schedule: "2026.02 - 2026.04 (7주)",
+        schedule: "2026.02 - 2026.04 (6주)",
         member: "Backend 1명, Frontend 1명, AI 4명",
-        role: "개발 인프라 구축, Schema 설계, DB 적재 파이프라인 구축",
+        role: "DB 스키마 설계, 개발 환경 구축 및 인프라 세팅, 데이터 적재 파이프라인 구축, Deep Agent 기반 AI 챗봇 구조 설계",
         features: [
             "대용량 데이터 업로드: 고객사별 Excel/CSV 컬럼 자동 매핑 후 Inventory·RMA 데이터 MariaDB 적재",
             "불량률 대시보드: 월별 제품군 불량률 집계 조회",
@@ -19,34 +19,43 @@ const projectData = {
         ],
         troubleshooting: [
             {
-                title: "불량률 조회 응답 68초 → 0.1초",
-                tags: ["MariaDB", "Materialized Table", "Stored Procedure", "쿼리 최적화"],
-                problem: "v_monthly_defect_rate 뷰가 매 조회 시 Inventory·RMA 전체를 집계하는 구조 — 대용량 환경에서 68초 소요",
-                solution: "집계 전용 테이블 생성 + 업로드 후 Stored Procedure로 수동 갱신하는 Materialized Table 패턴 적용 — 래핑 뷰를 통해 단순 SELECT로 조회",
-                metric: { before: "68초", after: "0.1초", improvement: "665배 개선" },
-                beforeFlow: ["조회 요청", "뷰 실행 (전체 집계)", "68초 응답"],
-                afterFlow: ["조회 요청", "집계 테이블 SELECT", "0.1초 응답"]
+                title: "불량률 조회 응답 68.4s → 0.1s",
+                tags: ["MariaDB", "Materialized Table", "Stored Procedure", "커버링 인덱스", "RANGE 파티셔닝"],
+                problem: "대용량 Inventory 및 RMA 데이터를 매번 실시간으로 집계하는 구조 — 데이터가 누적될수록 응답 속도가 기하급수적으로 저하, 최대 응답 시간 68.4초",
+                solution: "Materialized Table 패턴을 도입하여 집계 테이블을 미리 생성 — Stored Procedure를 통해 비동기적으로 갱신하도록 개선. 조회 패턴에 최적화된 커버링 인덱스 및 월 단위 RANGE 파티셔닝을 적용",
+                metric: { before: "68.4s", after: "0.1s", improvement: "약 680배 향상" },
+                beforeFlow: ["조회 요청", "전체 집계 실시간 수행", "68.4s 응답"],
+                afterFlow: ["조회 요청", "집계 테이블 SELECT", "0.1s 응답"]
             },
             {
-                title: "대용량 데이터 적재 20분 → 3분",
-                tags: ["MariaDB", "LOAD DATA LOCAL INFILE", "Bulk Insert", "성능 최적화"],
-                problem: "수십만 건 Inventory를 행 단위 INSERT로 처리 시 SQL 파싱·트랜잭션 오버헤드 누적 — 50만 건 기준 20분 이상 소요",
-                solution: "DataFrame → 임시 CSV 변환 후 LOAD DATA LOCAL INFILE로 MariaDB 직접 적재. 실패 환경 대비 10,000건 배치 INSERT 폴백 구현",
-                metric: { before: "20분↑", after: "3분", improvement: "약 7배 개선" },
+                title: "대용량 데이터 적재 시간 85% 단축 (20분 → 3분)",
+                tags: ["MariaDB", "LOAD DATA LOCAL INFILE", "Bulk Insert", "Batch Fallback"],
+                problem: "Inventory 데이터를 행 단위 INSERT로 처리 시 SQL 파싱 및 트랜잭션 오버헤드가 누적되어 50만 줄 기준 20분 이상 소요",
+                solution: "LOAD DATA LOCAL INFILE 도입 — pandas DataFrame을 임시 CSV로 변환 후 MariaDB 엔진 레벨에서 직접 Bulk 적재 (3분 이내). 환경 제약으로 Bulk Load 실패 시 10,000건 단위 Batch INSERT로 자동 전환하는 Fallback 로직 구현",
+                metric: { before: "20분 이상", after: "3분 이내", improvement: "적재 시간 85% 절감" },
                 beforeFlow: ["행 단위 INSERT × N", "SQL 파싱 × N", "트랜잭션 × N", "20분+"],
-                afterFlow: ["DataFrame → CSV", "LOAD DATA LOCAL INFILE", "3분"]
+                afterFlow: ["DataFrame → CSV", "LOAD DATA LOCAL INFILE", "3분 이내"]
+            },
+            {
+                title: "Deep Agent 기반 챗봇 설계로 환각 현상 극복",
+                tags: ["LangGraph", "Deep Agent", "LLM", "환각 현상"],
+                problem: "시장 품질 데이터에 전문 용어와 축약어가 혼재 — 챗봇 Agent가 데이터를 제대로 파악하지 못해 존재하지 않는 테이블 조회, 의도치 않은 데이터 반환 등 환각 현상 발생",
+                solution: "Deep Agent 기반 LLM Agent 구조 도입 — Orchestrator가 CoT로 의도 분석 및 Todo 생성, SQL 실행·용어 파악 등 작업은 wiki_expert / sql_expert / Visualizer Sub Agent에게 할당",
+                metric: { before: "환각 현상 빈번", after: "환각 발생 3% 내외", improvement: "안정적 자연어 쿼리" },
+                beforeFlow: ["자연어 질의", "단일 Agent 처리", "환각 현상 발생"],
+                afterFlow: ["자연어 질의", "Orchestrator (CoT / write_todos)", "Sub Agents 분담 처리", "정확한 결과 반환"]
             }
         ]
     },
     project2: {
         title: "바른발음 — AI 기반 한국어 발음 교정 서비스",
-        date: "2026.04.06 - 2026.05.21 (6주)",
+        date: "2026.04 - 2026.05 (7주)",
         institution: "SSAFY",
-        overview: "외국인 화자의 한국어 발음을 음소 단위로 분석하고, L1(모국어)별 오류 패턴에 맞춘 맞춤형 피드백을 제공하는 발음 교정 플랫폼",
+        overview: "외국인 화자의 한국어 발음을 녹음 및 음소 단위로 분석하여 모국어 패턴에 맞춘 정밀 피드백을 제공하는 음소 단위 발음 교정 플랫폼",
         tech: ["Kotlin", "Spring Boot", "FastAPI", "Spring Cloud Gateway", "PostgreSQL", "Redis", "Kafka", "Docker", "Jenkins"],
-        schedule: "2026.04.06 - 2026.05.21 (6주)",
-        member: "Backend 2명, Frontend 2명, Infra 1명, AI 1명",
-        role: "DB 스키마 설계, BE 개발, 발음 분석 AI 서빙 파이프라인 설계",
+        schedule: "2026.04 - 2026.05 (7주)",
+        member: "FE 2명, BE 2명, Infra 1명, AI 1명",
+        role: "AI 서빙 파이프라인 설계, DB 스키마 설계, 실전 회화 기능 설계 및 API 구현",
         features: [
             "발음 분석: 음성 녹음 → wav2vec2 음소 ASR → GOP 스코어링 → L1 오류 진단 → Gemini API 피드백 생성",
             "AI 회화 연습: Whisper STT 변환 후 Gemma LLM 질문 생성, 발음 평가 병렬 수행",
@@ -91,8 +100,8 @@ const projectData = {
         tech: ["Java", "Spring Boot", "Vue.js", "MySQL", "Redis", "MongoDB", "WebRTC (LiveKit)", "WebSocket", "RabbitMQ", "Docker", "Jenkins"],
         image: "assets/img/study_architecture.png",
         schedule: "2026.01 - 2026.02 (6주)",
-        member: "PM 1명, Backend 2명, Frontend 2명, Infra 1명",
-        role: "WebRTC(LiveKit) 기반 화상 스터디 구현, DB 스키마 설계, 보증금·벌금 자동 정산 구현",
+        member: "PM 1명, FE 1명, BE 2명, Infra 1명, AI 1명",
+        role: "WebRTC 환경 구축, DB 스키마 설계, 회원 및 스터디 관련 API 개발",
         features: [
             "스터디 관리: 복합 필터 검색, 스케줄러 기반 PENDING → IN_PROGRESS → ENDED 상태 자동 전이",
             "보증금·벌금 자동 정산: 결석·지각·목표 시간 미달 패널티 자동 계산 및 정상 출석자 균등 분배",
